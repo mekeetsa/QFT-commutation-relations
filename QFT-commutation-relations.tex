@@ -1,0 +1,749 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0cm,nohead]{geometry}
+\usepackage[active,tightpage]{preview}
+
+\usepackage{tikz,amsmath,amssymb,bm,color,cancel}
+
+%\usepackage{newtxtext}
+%\usepackage{newtxmath}
+
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{decorations.markings}
+
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{-1mm}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Macros
+
+\newcommand{\bb}[2]{
+	\!\!{\tt #1}
+	\\[6pt]
+	~{\large \color{blue} #2}
+}
+\newcommand{\bbb}[3]{
+	\!\!{\tt #1}
+	\\[6pt]
+	~{\large \color{blue} #2}
+	\\[6pt]
+	~{#3}
+}
+
+\newcommand{\tr}{\mathsf{{\scriptscriptstyle T}}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\ee}{\operatorname{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\op}[1]{\operatorname{#1}}
+
+\newcommand{\pL}{\mathsf{{\scriptscriptstyle L}}}
+\newcommand{\pR}{\mathsf{{\scriptscriptstyle R}}}
+\newcommand{\pC}{\mathsf{{\scriptscriptstyle C}}}
+
+\newcommand{\bPsi}{\boldsymbol{\Psi}}
+\newcommand{\bPhi}{\boldsymbol{\Phi}}
+
+\newcommand{\suY}{\mathrm{\scriptscriptstyle Y}}
+\newcommand{\suL}{\mathrm{\scriptscriptstyle L}}
+\newcommand{\suC}{\mathrm{\scriptscriptstyle C}}
+
+\newcommand{\dbar}[1]{\overline{#1}}
+\newcommand{\sbar}[1]{\bar{#1}}
+\newcommand{\anti}[1]{\bar{#1}}
+
+\newcommand{\quantNo}[3]{\mathbf{#1},\mathbf{#2},#3}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Box styles
+
+\tikzset{myRow/.style     ={draw,anchor=north west,rectangle}}
+\tikzset{boxWhite/.style  ={draw,anchor=north west,rectangle, very thin, rounded corners=5pt, fill=white}}
+\tikzset{boxGray/.style   ={draw,anchor=north west,rectangle, very thin, rounded corners=5pt, fill=gray!10}}
+\tikzset{boxRed/.style    ={draw,anchor=north west,rectangle, very thin, rounded corners=5pt, fill=red!4}}
+\tikzset{boxGreen/.style  ={draw,anchor=north west,rectangle, very thin, rounded corners=5pt, fill=green!2}}
+\tikzset{boxYellow/.style ={draw,anchor=north west,rectangle, very thin, rounded corners=5pt, fill=yellow!5}}
+\tikzset{boxBlue/.style   ={draw,anchor=north west,rectangle, very thin, rounded corners=5pt, fill=blue!2}}
+\tikzset{boxCyan/.style   ={draw,anchor=north west,rectangle, very thin, rounded corners=5pt, fill=cyan!2}}
+\tikzset{colorLagr/.style ={fill=magenta!8}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Row/Column styles
+
+\tikzset{R/.style={
+	minimum height = #1 mm
+}}
+
+\tikzset{C/.style={
+    minimum width = #1 mm, 
+    text width = #1 mm - 3 mm,
+    inner sep = 0
+}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tikzset{cross/.style={
+	cross out, thick, draw=black, inner sep=0pt, outer sep=0pt,
+	minimum size=1.5mm}
+};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Paper W/H
+
+% \draw [blue!40] (-20.5,14.5) rectangle (20.5,-14.5);
+
+\node at (-20.5,14.5) {}; \node at (20.5,-14.5) {};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title
+
+\node [color=black] at (0,14.25) {
+	\huge\sf Invariant Commutation and Propagation Functions
+};
+
+\node [anchor=north, color=black] at (0,13.9) {
+	by M.B.Kocic ~--~ Version 1.01 (2016-03-25) ~--~ FK8017 HT15
+};
+
+\pdfinfo {
+%	/CreationDate	(D:20160121124500)
+	/Title			(Invariant Commutation and Propagation Functions)
+	/Author			(Mikica B Kocic)
+	/Subject		(FK8017 HT15)
+	/Keywords		(QFT, Commutation Function, Propagator)
+	/Creator		(TeX-TikZ)
+}
+
+\node [boxWhite,R=195,C=90] at (11.5,13) {
+	Real scalar field: \vspace{-2mm}
+	\begin{gather*}
+		\mathcal{L}[\phi,\partial_\mu \phi] = - \tfrac{1}{2} \phi(x) \,(\square + m^2) \, \phi(x) \,, \\
+        \text{EoM:~~} \frac{\delta\mathcal{L}}{\delta\phi(x)} = -\!(\square + m^2) \, \phi(x) = 0 \,.
+	\end{gather*}
+	The complete set of plane wave states: \vspace{-2mm}
+	\begin{align*}
+		\phi(x) &= \phi^{+}(x) + \phi^{-}(x) \,,\\
+		\phi^{+}(x) &= \int \frac{\dd^3 k}{(2\pi)^{3/2}}
+			\frac{1}{\sqrt{2 \omega_{\mathbf{k}}}} \,
+			a(\mathbf{k}) \ee^{-\ii k\cdot x}
+			\,,\\
+		\phi^{-}(x) &= \int \frac{\dd^3 k}{(2\pi)^{3/2}}
+			\frac{1}{\sqrt{2 \omega_{\mathbf{k}}}} \,
+			a^\dagger(\mathbf{k}) \ee^{\ii k\cdot x}\,.
+	\end{align*}
+	Contour integrals: \vspace{-2mm}
+	\begin{gather*}
+	\oint_\gamma \frac{f(z) \,\dd z}{z-z_0}= 
+		\begin{cases} 
+			\, 2\pi\ii \,f(z_0), & z_0 \in \op{int}\gamma , \\
+			\, 0, & z_0 \notin \op{int}\gamma ;
+		\end{cases} \\[1.5mm]
+	I_\gamma(x) = \oint_\gamma \frac{\ee^{-\ii k\cdot x}\,\dd k^0}{k^2-m^2}
+	= \oint_\gamma \frac{\ee^{-\ii k\cdot x}\,\dd k^0}{(k^0-\omega_{\mathbf{k}})(k^0+\omega_{\mathbf{k}})} \,.
+	\end{gather*}
+	Positive and negative frequency poles: \vspace{-3mm}
+	\begin{align*}
+	I_\gamma(x) &= 
+			\, + 2\pi\ii \, \frac{\ee^{-\ii k\cdot x}}{2\omega_{\mathbf{k}}},
+			\quad k^0 = + \omega_{\mathbf{k}} \in \gamma=C^{+} , \\
+	I_\gamma(x) &= 
+			\, - 2\pi\ii \, \frac{\ee^{-\ii k\cdot x}}{2\omega_{\mathbf{k}}},
+			\quad k^0 = - \omega_{\mathbf{k}} \in \gamma=C^{-} , \\
+	I_{\pm}(x) &= 
+			\, \pm 2\pi\ii \, \frac{\ee^{-\ii k\cdot x}}{2\omega_{\mathbf{k}}}
+			\delta(k^0\mp\omega_{\mathbf{k}}) .
+	\end{align*}
+	Hence,\vspace{-3mm}
+	\begin{gather*}
+	\Delta_\gamma(x) = \int_\gamma \! \frac{\dd^4 k}{(2\pi)^4}
+	\ee^{-\ii k\cdot x} \frac{-1}{k^2-m^2}	= 
+		-\int\! \frac{\dd^3 k}{(2\pi)^4} I_\gamma \,, \\
+	\ii \Delta^{\pm}(x) = 
+		\pm \int \frac{\dd^3 k}{(2\pi)^3} 
+		\ee^{-\ii k\cdot x} \, \delta(k^0\mp\omega_{\mathbf{k}})\frac{1}{2\omega_{\mathbf{k}}} ,
+	\end{gather*} \\[-2mm]
+	where, from the properties of the $\delta$-function,\vspace{-3mm}
+	\begin{gather*}
+	\delta(k^2-m^2) \, \theta(\pm k^0) = 
+		\delta(k^0\mp\omega_{\mathbf{k}}) \frac{1}{2\omega_{\mathbf{k}}} \,,\\
+	\pm \int\dd k^0 \, \delta(k^2-m^2) \, \theta(\pm k^0) = 
+		\frac{1}{2\omega_{\mathbf{k}}} \,.
+	\end{gather*}
+};
+
+\node [boxWhite,R=100,C=155] at (-20.5,-4.5) {
+    \textsf{Main properties of the commutation functions:}\\[1mm]
+	$1^\circ$ The commutation functions are Lorentz invariant.\vspace{-1mm}
+	\begin{align}
+	\ii\Delta(x) &= \int\! \frac{\dd^3 k}{(2\pi)^3}
+		\int \!\dd k^0 \, \ee^{-\ii k\cdot x}
+		\delta(k^2-m^2) \, \op{sgn}(k^0) \\
+	\ii\Delta_1(x) &= \int\! \frac{\dd^3 k}{(2\pi)^3}
+		\int\! \dd k^0 \, \ee^{-\ii k\cdot x}
+		\delta(k^2-m^2) \\
+	\ii \Delta^{\pm}(x) &= \int\! \frac{\dd^3 k}{(2\pi)^3}
+		\int\! \dd k^0 \,\ee^{-\ii k\cdot x} 
+		\delta(k^2-m^2) \, \left(\pm \theta(\pm k^0)\right)
+	\end{align}
+	$2^\circ$  The following \textit{initial conditions at vanishing time difference} hold:\vspace{-3mm}
+	\begin{equation}
+	\Delta(0,\mathbf{x}) = 0, \qquad
+	\partial_0 \Delta(x^0,\mathbf{x}) \vert_{x^0=0} = -\delta^3(\mathbf{x})\,.
+	\vspace{-3mm}
+	\end{equation}
+	As a corrolary, the ETCR are regained.\\[2mm]
+	$3^\circ$  From $2^\circ$, it also follows the condition of \textit{microcausality}:
+	$\Delta(x-y)=0$ for $(x-y)^2<0$,
+	i.e. $\Delta(x-y)$ vanishes if the argument is spacelike.
+	(This is a very fundamental property!)
+	\\[2mm]
+	$4^\circ$  All the commutation functions satisfy EoM; 
+	e.g. $ - ( \square_x + m^ 2) \, \Delta(x-y) = 0 $.
+	\\[2mm]
+	Note that $2^\circ$ and $4^\circ$ are sufficient to provide a unique 
+	definition of the function $\Delta(x)$.
+	(EoM is a hyperbolic PDE with the initial data (4) on a space-like 
+	hypersurface $x^0 =0$).
+	\\[1mm]
+	Also, all the $\Delta$-functions show singular behavior on the light cone.
+};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Commutation functions
+
+\node [boxGreen,anchor=north west,R=10,C=155] at (-20.5,13) {\large
+	\textsf{\textbf{ Commutation Functions} (closed contours)}
+};
+
+\node [boxRed,R=10,C=80,align=left] at (-20.5,11.5) {
+	\textsf{\textbf{ Pauli-Jordan-Schwinger function}}
+};
+
+\node [boxYellow,R=25,C=80,align=center] at (-20.5,10.5) {\vspace{-5mm}
+	\begin{align*}
+	\Delta(x-y) &= \int_{C} \frac{\dd^4 k}{(2\pi)^4}
+	   \ee^{-\ii k \cdot (x-y)}
+	   \frac{-1}{k^2-m^2} \\[3mm]
+	\ii \Delta(x-y) &= [ \, \phi(x), \, \phi(y) \, ]
+	\end{align*}
+};
+
+\node [boxRed,R=10,C=80,align=left] at (-20.5,7.5) {
+	\textsf{\textbf{ Positive frequency commutation function}}
+};
+
+\node [boxYellow,R=25,C=80,align=center] at (-20.5,6.5) {\vspace{-5mm}
+	\begin{align*}
+	\Delta^{+}(x-y) &= \int_{C^{+}} \frac{\dd^4 k}{(2\pi)^4}
+	   \ee^{-\ii k \cdot (x-y)}
+	   \frac{-1}{k^2-m^2} \\[3mm]
+	\ii \Delta^{+}(x-y) &= [ \, \phi^{+}(x), \, \phi^{-}(y) \, ]
+	\end{align*}
+};
+
+\node [boxRed,R=10,C=80,align=left] at (-20.5,3.5) {
+	\textsf{\textbf{ Negative frequency commutation function}}
+};
+
+\node [boxYellow,R=25,C=80,align=center] at (-20.5,2.5) {\vspace{-5mm}
+	\begin{align*}
+	\Delta^{-}(x-y) &= \int_{C^{-}} \frac{\dd^4 k}{(2\pi)^4}
+	   \ee^{-\ii k \cdot (x-y)}
+	   \frac{-1}{k^2-m^2} \\[3mm]
+	\ii \Delta^{-}(x) &= [ \, \phi^{-}(x), \, \phi^{+}(y) \, ]
+	\end{align*}
+};
+
+\node [boxRed,R=10,C=80,align=left] at (-20.5,-0.5) {
+	\textsf{\textbf{ Anticommutation (or auxiliary) function}}
+};
+
+\node [boxYellow,R=25,C=80,align=center] at (-20.5,-1.5) {\vspace{-5mm}
+	\begin{align*}
+	\Delta_1(x-y) &= \int_{C_1} \frac{\dd^4 k}{(2\pi)^4}
+	   \ee^{-\ii k \cdot (x-y)}
+	   \frac{-1}{k^2-m^2} \\[3mm]
+	\ii \Delta_1(x-y) &= \{ \, \phi(x), \, \phi(y) \, \}
+	\end{align*}
+};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\node [boxWhite,R=75,C=70] at (-4.5,-7) {
+	\textsf{Relations between $\Delta$-functions:}
+	\vspace{-1mm}
+	\begin{align*}
+	\Delta^{\pm}(-x) &= -\Delta^{\mp}(x) \\[1mm]
+	\Delta(-x) &= -\Delta(x) \\[1mm]
+	\Delta_1(-x) &= \Delta_1(x) \\[1mm]
+	\Delta(x) &= \Delta^{+}(x) + \Delta^{-}(x) \\[1mm]
+	\Delta_1(x) &= \Delta^{+}(x) - \Delta^{-}(x) \\[1mm]
+	\Delta^{+}(x) &= \tfrac{1}{2} \left( \Delta(x) + \Delta_1(x) \right) \\[1mm]
+	\Delta^{-}(x) &= \tfrac{1}{2} \left( \Delta(x) - \Delta_1(x) \right) \\[1mm]
+	\Delta_1(x) &= \Delta_{\mathrm{F}}(x) - \Delta_{\mathrm{D}}(x) \\[1mm]
+	\Delta(x) &= \Delta_{\mathrm{R}}(x) - \Delta_{\mathrm{A}}(x)
+	\end{align*}
+};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C contour
+
+\node (Cc) at (-9,9.5) {};
+\def\px{Cc};
+
+\draw[-triangle 45] ($(\px)-(3,0)$) -- ($(\px)+(3.5,0)$) 
+	node[below] {\small $\op{Re} k^0$};
+\draw[-triangle 45] ($(\px)-(0,1.8)$) -- ($(\px)+(0,2)$) 
+	node[left,yshift=-2mm] {\small $\op{Im} k^0$};
+\draw ($(\px)-(1.5,0)$) node[cross,red] {};
+\draw ($(\px)-(1.5,0)$) node[below,red] {\small $-\omega_{\mathbf{k}}$};
+\draw ($(\px)+(1.5,0)$) node[cross,blue] {};
+\draw ($(\px)+(1.5,0)$) node[below,blue] {\small $+\omega_{\mathbf{k}}$};
+
+\draw[magenta, thick, decoration={
+        markings, mark=at position 0.1 with {\arrow[line width=1.5pt]{>}} 
+     }, postaction={decorate} ]
+  ($(\px)+(2.5,0)$) arc (0:360:2.5 and 1.5);
+
+\draw ($(\px)+(2.25,1.1)$) node[magenta] {$C$};
+
+\node [right,magenta] at (-8.5,7.75) {\small $C = C_{+} \cup C_{-}$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C+ contour
+
+\node (Cplus) at (-9,5.75) {};
+\def\px{Cplus};
+
+\draw[-triangle 45] ($(\px)-(3,0)$) -- ($(\px)+(3.5,0)$) 
+	node[below] {\small $\op{Re} k^0$};
+\draw[-triangle 45] ($(\px)-(0,1.8)$) -- ($(\px)+(0,1.5)$) 
+	node[left,yshift=-2mm] {\small $\op{Im} k^0$};
+\draw ($(\px)-(1.5,0)$) node[cross,red] {};
+\draw ($(\px)-(1.5,0)$) node[below,red] {\small $-\omega_{\mathbf{k}}$};
+\draw ($(\px)+(1.5,0)$) node[cross,blue] {};
+\draw ($(\px)+(1.5,0)$) node[below,blue] {\small $+\omega_{\mathbf{k}}$};
+
+\draw[white!70!blue, thick, decoration={
+        markings, mark=at position 0.4 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.92 with {\arrow[line width=1.5pt]{>}} 
+     }, postaction={decorate} ]
+  ($(\px)-(2.5,0)$) arc (0:-180:-2.5 and 1.5)
+  -- ($(\px)+(2.15,0)$) arc (0:180:0.65 and 0.65)
+  -- ($(\px)-(0.85,0)$) arc (0:-180:0.65 and 0.65)
+  -- cycle  ;
+
+\draw[blue, thick, decoration={
+        markings, mark=at position 0.15 with {\arrow[line width=1.5pt]{>}} 
+     }, postaction={decorate} ]
+  ($(\px)+(2.1,0)$) arc (0:360:0.6 and 0.6);
+  
+\draw ($(\px)+(2.35,0.6)$) node[blue] {$C_{+}$};
+
+\node [right,blue] at (-8.5,4) {\small $C_{+} = -C_{\mathrm{F}}$ for $x^0 > 0$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C- contour
+
+\node (Cminus) at (-9,1.5) {};
+\def\px{Cminus};
+
+\draw[-triangle 45] ($(\px)-(3,0)$) -- ($(\px)+(3.5,0)$) 
+	node[below] {\small $\op{Re} k^0$};
+\draw[-triangle 45] ($(\px)-(0,1.5)$) -- ($(\px)+(0,2)$) 
+	node[left,yshift=-2mm] {\small $\op{Im} k^0$};
+\draw ($(\px)-(1.5,0)$) node[cross,red] {};
+\draw ($(\px)-(1.5,0)$) node[below,red] {\small $-\omega_{\mathbf{k}}$};
+\draw ($(\px)+(1.5,0)$) node[cross,blue] {};
+\draw ($(\px)+(1.5,0)$) node[below,blue] {\small $+\omega_{\mathbf{k}}$};
+
+\draw[white!70!red, thick, decoration={
+        markings, mark=at position 0.125 with {\arrow[line width=1.5pt]{<}},
+        mark=at position 0.625 with {\arrow[line width=1.5pt]{<}}
+     }, postaction={decorate} ]
+  ($(\px)-(2.5,0)$) arc (0:180:-2.5 and 1.5)
+  -- ($(\px)+(2.15,0)$) arc (0:180:0.65 and 0.65)
+  -- ($(\px)-(0.85,0)$) arc (0:-180:0.65 and 0.65)
+  -- cycle  ;
+
+\draw[red, thick, decoration={
+        markings, mark=at position 0.65 with {\arrow[line width=1.5pt]{>}}
+     }, postaction={decorate} ]
+  ($(\px)-(0.9,0)$) arc (0:360:0.6 and 0.6);
+  
+\draw ($(\px)+(-2.1,-0.8)$) node[red] {$C_{-}$};
+
+\node [right,red] at (-8.5,0.25) {\small $C_{-} = C_{\mathrm{F}}$ for $x^0 < 0$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C1 contour
+
+\node (C1) at (-9,-2.25) {};
+\def\px{C1};
+
+\draw[-triangle 45] ($(\px)-(3,0)$) -- ($(\px)+(3.5,0)$) 
+	node[below] {\small $\op{Re} k^0$};
+\draw[-triangle 45] ($(\px)-(0,1.5)$) -- ($(\px)+(0,1.8)$) 
+	node[left,yshift=-2mm] {\small $\op{Im} k^0$};
+\draw ($(\px)-(1.5,0)$) node[cross,red] {};
+\draw ($(\px)-(1.5,0)$) node[below,red] {\small $-\omega_{\mathbf{k}}$};
+\draw ($(\px)+(1.5,0)$) node[cross,blue] {};
+\draw ($(\px)+(1.5,0)$) node[below,blue] {\small $+\omega_{\mathbf{k}}$};
+
+\draw[black!50!red, thick, decoration={
+        markings, 
+        mark=at position 0.2 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.55 with {\arrow[line width=1.5pt]{>}}
+     }, postaction={decorate} ]
+  ($(\px)+(1.5,-1)$) arc (-90:90:1 and 1)
+  .. controls ($(\px)+(0,1)$) and ($(\px)+(0,-1)$) 
+  .. ($(\px)+(-1.5,-1)$)
+  -- ($(\px)+(-1.5,-1)$) arc (-90:90:-1 and 1)
+  .. controls ($(\px)+(0,1)$) and ($(\px)+(0,-1)$)
+  .. ($(\px)+(1.5,-1)$);
+
+\draw ($(\px)+(2.25,1.15)$) node[black!50!red] {$C_1$};
+
+\node [right,black!50!red] at (-8.5,-3.5) {\small $C_1 = C_{+} \cup -C_{-}$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Propagators
+
+\node [boxGreen,anchor=north west,R=10,C=155] at (-4.5,13) {\large
+	\textsf{\textbf{ Propagation Functions} (open contours that extend to infinity)}
+};
+
+\node [boxWhite,anchor=north west,R=75,C=175,align=justify] at (3,-7) {
+	All the propagation functions are Green's functions as they yield 
+	the $\delta$-function when the Klein-Gordon operator is applied. 
+	Namely, they contain a product of the function 
+	$\Delta(x)$ with a unit step function in time,
+	either $\theta(x^0)$ or $\frac{1}{2}\op{sgn}(x^0)$, of which
+	derivativs are the $\delta$-functions.\vspace{2mm}
+	\\For example, for
+	$(\square+m^2)\Delta_{\mathrm{F}}(x)$ we have:\vspace{-1mm}
+	\begin{gather*}
+	(\square+m^2) \left( \tfrac{1}{2} \left( \op{sgn}(x^0) \, \Delta(x) + \Delta_1(x) \right) \right) 
+	(\delta_0^2 -\boldsymbol{\nabla}^2+m^2) \left( \tfrac{1}{2} \op{sgn}(x_0) \Delta(x) \right)= \\
+	= \left( \partial_0 \delta(x) \right)\Delta(x)
+	+ 2 \delta(x^0) \left( \partial_0 \Delta(x) \right)
+	+ \tfrac{1}{2} \op{sgn}(x_0) (\square+m^2)\Delta(x) \,.
+	\\[-7mm]
+	\end{gather*}The last term vanishes because $\Delta(x)$ solves EoM,
+	and the first term is equivalent to $-\delta(x^0)\!\left( \partial_0\Delta(x) \right)$. 
+	Using a test function $f(x^0)$, an integration by parts yields,\vspace{-2mm}
+	\begin{gather*}
+	\int \dd x^0 \left( \partial_0 \delta(x) \right)\Delta(x) f(x^0)
+	= - \partial_0\Delta(x) \,\vert_{x^0=0} \,f - \Delta(0,\mathbf{x})\, \partial_0 \,f \,\vert_{x^0=0}
+	= - \partial_0 \Delta(x) \,\vert_{x^0=0} \,f = -\delta^3(\mathbf{x}) \,f \,.
+	\\[-8mm]
+	\end{gather*}
+	Here, we applied the initial conditions (4) from Property $2^\circ$. Hence,\vspace{-1mm}
+	\begin{gather*}
+	(\square+m^2)\Delta_{\mathrm{F}}(x) 
+	= - \delta(x^0) \left( \partial_0 \Delta(x) \right)
+	+ 2 \delta(x^0) \left( \partial_0 \Delta(x) \right)
+	= \delta(x^0) \partial_0 \Delta(x) = -\delta(x^0) \delta^3(\mathbf{x}) 
+	= -\delta^4(x) \,.
+	\end{gather*}
+};
+
+\node [boxRed,R=15,C=80,align=left] at (3,11.5) {
+	\textsf{\textbf{ Feynman propagator}\\
+	~(causal propagator or causal Green's function)}
+};
+
+\node [boxYellow,R=40,C=80,align=center] at (3,10) {\vspace{-5mm}
+	\begin{align*}
+	\Delta_{\mathrm{F}}(x-y) &= \int_{C_{\mathrm{F}}} \frac{\dd^4 k}{(2\pi)^4}
+	   \ee^{-\ii k \cdot (x-y)}
+	   \frac{1}{k^2-m^2} \\[2mm]
+	\ii \Delta_{\mathrm{F}}(x-y) &= \left\langle 0 \vert \mathrm{T} \{ \, \phi(x), \, \phi(y) \, \} \vert 0 \right\rangle \\[2mm]
+	\Delta_{\mathrm{F}}(x) &= \theta(x^0) \, \Delta^{+}(x) - \theta(-x^0) \, \Delta^{-}(x) \\[2mm]
+	 &= \tfrac{1}{2} \left( \op{sgn}(x^0) \, \Delta(x) + \Delta_1(x) \right)
+	\end{align*}
+};
+
+
+\node [boxRed,R=10,C=80,align=left] at (3,5.5) {
+	\textsf{\textbf{ Causal retarded propagator}}
+};
+
+\node [boxYellow,R=10,C=80,align=center] at (3,4.5) {\vspace{-5mm}
+	\begin{align*}
+	\Delta_{\mathrm{R}}(x) &= -\theta(x^0) \, \Delta(x)
+	\end{align*}
+};
+
+\node [boxRed,R=10,C=80,align=left] at (3,3) {
+	\textsf{\textbf{ Causal advanced propagator}}
+};
+
+\node [boxYellow,R=10,C=80,align=center] at (3,2) {\vspace{-5mm}
+	\begin{align*}
+	\Delta_{\mathrm{A}}(x) &= \theta(-x^0) \, \Delta(x)
+	\end{align*}
+};
+
+\node [boxRed,R=15,C=80,align=left] at (3,0.5) {
+	\textsf{\textbf{ Dyson propagator} \\
+	~(anticausal propagator)}
+};
+
+\node [boxYellow,R=20,C=80,align=center] at (3,-1) {\vspace{-5mm}
+	\begin{align*}
+	\Delta_{\mathrm{D}}(x) &= 
+		\theta(x^0) \, \Delta^{-}(x) - \theta(-x^0) \, \Delta^{+}(x) \\[2mm]
+	 &= \tfrac{1}{2} \left( \op{sgn}(x^0) \, \Delta(x) - \Delta_1(x) \right)
+	 \end{align*}
+};
+
+\node [boxRed,R=10,C=80,align=left] at (3,-3.5) {
+	\textsf{\textbf{ Principal-part propagator}}
+};
+
+\node [boxYellow,R=20,C=80,align=center] at (3,-4.5) {\vspace{-5mm}
+	\begin{align*}
+	\overline{\Delta}(x) &= 
+		\tfrac{1}{2} \op{sgn}(x^0) \, \Delta(x) \\[2mm]
+	 &= \tfrac{1}{2} \left( \Delta_{\mathrm{R}}(x) + \Delta_{\mathrm{A}}(x) \right)
+	\end{align*}
+};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C_F contour
+
+\node (Cf) at (-1.5,9.5) {};
+\def\px{Cf};
+
+\draw[-triangle 45] ($(\px)-(3,0)$) -- ($(\px)+(3.5,0)$) 
+	node[below] {\small $\op{Re} k^0$};
+\draw[-triangle 45] ($(\px)-(0,1.8)$) -- ($(\px)+(0,2)$) 
+	node[left,yshift=-2mm] {\small $\op{Im} k^0$};
+\draw ($(\px)-(1.5,0)$) node[cross,red] {};
+\draw ($(\px)-(1.5,0)$) node[below,red] {\small $-\omega_{\mathbf{k}}$};
+\draw ($(\px)+(1.5,0)$) node[cross,blue] {};
+\draw ($(\px)+(1.5,0)$) node[below,blue] {\small $+\omega_{\mathbf{k}}$};
+
+\draw[red, thick, dotted, decoration={
+        markings, mark=at position 0.2 with {\arrow[line width=1.5pt]{<}} 
+     }, postaction={decorate} ]
+  ($(\px)-(2.5,0)$) arc (0:180:-2.5 and 1.5);
+
+\draw[blue, thick, dotted, decoration={
+        markings, mark=at position 0.8 with {\arrow[line width=1.5pt]{<}} 
+     }, postaction={decorate} ]
+  ($(\px)-(2.5,0)$) arc (0:-180:-2.5 and 1.5);
+
+\draw[black!50!green, thick, decoration={
+        markings, mark=at position 0.22 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.52 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.78 with {\arrow[line width=1.5pt]{>}} 
+     }, postaction={decorate} ]
+  ($(\px)-(3,0)$) 
+  -- ($(\px)-(2.15,0)$) arc (0:180:-0.65 and -0.65)
+  -- ($(\px)+(0.85,0)$) arc (0:180:-0.65 and 0.65)
+  -- ($(\px)+(3.5,0)$);
+
+\draw ($(\px)+(-0.3,0.3)$) node[black!50!green] {$C_\mathrm{F}$};
+\draw ($(\px)+(-2.2,1.4)$) node[red] {\small $x^0<0$};
+\draw ($(\px)+(2.2,-1.4)$) node[blue] {\small $x^0>0$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C_R contour
+
+\node (Cret) at (-1.5,5.75) {};
+\def\px{Cret};
+
+\draw[-triangle 45] ($(\px)-(3,0)$) -- ($(\px)+(3.5,0)$) 
+	node[below] {\small $\op{Re} k^0$};
+\draw[-triangle 45] ($(\px)-(0,1.5)$) -- ($(\px)+(0,1.5)$) 
+	node[left,yshift=-2mm] {\small $\op{Im} k^0$};
+\draw ($(\px)-(1.5,0)$) node[cross,red] {};
+\draw ($(\px)-(1.5,0)$) node[below,red] {\small $-\omega_{\mathbf{k}}$};
+\draw ($(\px)+(1.5,0)$) node[cross,blue] {};
+\draw ($(\px)+(1.5,0)$) node[below,blue] {\small $+\omega_{\mathbf{k}}$};
+
+\draw[black!50!green, thick, decoration={
+        markings, mark=at position 0.18 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.52 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.78 with {\arrow[line width=1.5pt]{>}} 
+     }, postaction={decorate} ]
+  ($(\px)-(3,0)$) 
+  -- ($(\px)-(2.15,0)$) arc (0:-180:-0.65 and -0.65)
+  -- ($(\px)+(0.85,0)$) arc (0:180:-0.65 and 0.65)
+  -- ($(\px)+(3.5,0)$);
+  
+\draw ($(\px)+(-0.3,0.3)$) node[black!50!green] {$C_\mathrm{R}$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C_A contour
+
+\node (Cadv) at (-1.5,2.5) {};
+\def\px{Cadv};
+
+\draw[-triangle 45] ($(\px)-(3,0)$) -- ($(\px)+(3.5,0)$) 
+	node[below] {\small $\op{Re} k^0$};
+\draw[-triangle 45] ($(\px)-(0,1.5)$) -- ($(\px)+(0,1.5)$) 
+	node[left,yshift=-2mm] {\small $\op{Im} k^0$};
+\draw ($(\px)-(1.5,0)$) node[cross,red] {};
+\draw ($(\px)-(1.5,0)$) node[below,red] {\small $-\omega_{\mathbf{k}}$};
+\draw ($(\px)+(1.5,0)$) node[cross,blue] {};
+\draw ($(\px)+(1.5,0)$) node[below,blue] {\small $+\omega_{\mathbf{k}}$};
+
+\draw[black!50!green, thick, decoration={
+        markings, mark=at position 0.18 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.52 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.78 with {\arrow[line width=1.5pt]{>}} 
+     }, postaction={decorate} ]
+  ($(\px)-(3,0)$) 
+  -- ($(\px)-(2.15,0)$) arc (0:180:-0.65 and -0.65)
+  -- ($(\px)+(0.85,0)$) arc (0:-180:-0.65 and 0.65)
+  -- ($(\px)+(3.5,0)$);
+  
+\draw ($(\px)+(-0.3,0.3)$) node[black!50!green] {$C_\mathrm{A}$};
+
+\node [right,magenta] at (-1,1.25) {\small $C = -C_{\mathrm{R}} \cup C_{\mathrm{A}}$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C_D contour
+
+\node (Cd) at (-1.5,-1.25) {};
+\def\px{Cd};
+
+\draw[-triangle 45] ($(\px)-(3,0)$) -- ($(\px)+(3.5,0)$) 
+	node[below] {\small $\op{Re} k^0$};
+\draw[-triangle 45] ($(\px)-(0,1.5)$) -- ($(\px)+(0,1.8)$) 
+	node[left,yshift=-2mm] {\small $\op{Im} k^0$};
+\draw ($(\px)-(1.5,0)$) node[cross,red] {};
+\draw ($(\px)-(1.5,0)$) node[below,red] {\small $-\omega_{\mathbf{k}}$};
+\draw ($(\px)+(1.5,0)$) node[cross,blue] {};
+\draw ($(\px)+(1.5,0)$) node[below,blue] {\small $+\omega_{\mathbf{k}}$};
+
+\draw[black!50!green, thick, decoration={
+        markings, mark=at position 0.22 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.52 with {\arrow[line width=1.5pt]{>}},
+        mark=at position 0.78 with {\arrow[line width=1.5pt]{>}} 
+     }, postaction={decorate} ]
+  ($(\px)-(3,0)$) 
+  -- ($(\px)-(2.15,0)$) arc (0:-180:-0.65 and -0.65)
+  -- ($(\px)+(0.85,0)$) arc (0:-180:-0.65 and 0.65)
+  -- ($(\px)+(3.5,0)$);
+
+\draw ($(\px)+(-0.3,0.3)$) node[black!50!green] {$C_\mathrm{D}$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C_pp contour
+
+\node (Cpp) at (-1.5,-5) {};
+\def\px{Cpp};
+
+\draw[-triangle 45] ($(\px)-(3,0)$) -- ($(\px)+(3.5,0)$) 
+	node[below] {\small $\op{Re} k^0$};
+\draw[-triangle 45] ($(\px)-(0,1.5)$) -- ($(\px)+(0,1.8)$) 
+	node[left,yshift=-2mm] {\small $\op{Im} k^0$};
+
+\draw[black!50!green, thick] ($(\px)-(3,0)$) -- ($(\px)-(1.6,0)$);
+\draw[black!50!green, thick] ($(\px)+(1.6,0)$) -- ($(\px)+(3.5,0)$);
+
+\draw[black!50!green, thick, decoration={
+        markings, mark=at position 0.65 with {\arrow[line width=1.5pt]{>}} 
+     }, postaction={decorate} ]
+  ($(\px)-(1.4,0)$) -- ($(\px)+(1.4,0)$);
+
+\draw ($(\px)-(1.5,0)$) node[cross,red] {};
+\draw ($(\px)-(1.5,0)$) node[below,red] {\small $-\omega_{\mathbf{k}}$};
+\draw ($(\px)+(1.5,0)$) node[cross,blue] {};
+\draw ($(\px)+(1.5,0)$) node[below,blue] {\small $+\omega_{\mathbf{k}}$};
+
+\draw ($(\px)+(-0.3,0.3)$) node[black!50!green] {$\overline{C}$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% C_pp contour
+
+
+%\draw[blue,decorate, decoration={brace, amplitude=5pt}] (6.25,4.5)--(6.25,0.5);
+%\draw[blue,decorate, decoration={brace, amplitude=5pt}] (5.75,2.5)--(5.75,0.5);
+
+%\draw[blue,decorate, decoration={brace, amplitude=5pt}] (6.25,-1.5)--(6.25,-5.5);
+%\draw[blue,decorate, decoration={brace, amplitude=5pt}] (5.75,-3.5)--(5.75,-5.5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Conj. ops
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Trading R/L
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Weinberg rot
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SSB
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Comments
+
+% \node [boxWhite,C=100,R=45] at (-20.5,-15) {
+% 	\vspace{-4mm}
+% 	\begin{gather*}
+% 		D_\mu \bPhi = D_\mu  \begin{pmatrix} H^{+} \\ H^{0\prime} \end{pmatrix} 
+% 					+ D_\mu  \begin{pmatrix} 0 \\ v/\sqrt2 \end{pmatrix}
+% 	\\[0.5em]
+% 		D_\mu  \begin{pmatrix} 0 \\ v/\sqrt2 \end{pmatrix} = 
+% 		\frac{\ii v}{2\sqrt2} \begin{pmatrix}
+% 			g W^1_{\mu} - \ii g W^2_{\mu} \\
+% 			-g W^3_{\mu} + g^\prime B_\mu
+% 		\end{pmatrix}
+% 	\end{gather*}
+% };
+% 
+% \node [boxWhite,C=80,R=45] at (-10,-15) {
+% 	\vspace{-4mm}
+% 	\begin{gather*}
+% 		m_W = \frac{g v}{2}, ~
+% 		m_Z = \frac{v}{\cos \theta_\mathrm{W}}, ~
+% 		m_H = \sqrt{ -2\mu^2 },
+% 	\\[0.5em]
+% 		\quad
+% 		m_W\approx 80 \,\mathrm{GeV}, ~
+% 		m_Z\approx 91 \,\mathrm{GeV}, ~
+% 	\\[0.5em]
+% 		v \approx 246 \,\mathrm{GeV}, ~
+% 		m_H\approx 125 \,\mathrm{GeV}
+% 	\\[0.5em]
+% 		\sin^2 \theta_\mathrm{W} \approx 0.231
+% 	\end{gather*}
+% };
+% 
+% \node [boxWhite,C=100] at (-1.5,-15) {
+% 	Difference from Mandl and Shaw (MS $\to$ here):\\
+% 	~\\
+% 	1) Gluon Fields: $A_{i\mu}$ $\to$ $G^a_\mu$ \\
+% 	2) Factors : $W \to 2W$, $G \to 2G$ \\
+% 	3) $B_{\mu\nu}, ...$ $\to$ $B_{\nu\mu}, ...$
+% };
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
